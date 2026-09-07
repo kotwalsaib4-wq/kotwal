@@ -63,6 +63,12 @@
     text-align:center;
     padding:30px 0;
   }
+  .bignum{
+    font-size:36px;
+    letter-spacing:.08em;
+    color:var(--accent);
+    margin:10px 0 16px;
+  }
   .ring-msg{
     display:none;
     text-align:center;
@@ -116,7 +122,9 @@
     </div>
 
     <div class="idle-msg" id="idleMsg">
-      دلته انتظار کوم چی څوک زنګ راووهی…
+      ستاسو نمبر دی:
+      <div class="bignum" id="bigNum">— — —</div>
+      دا نمبر هغه چا ته ورکړئ چی غواړي درسره خبرې وکړي.
     </div>
 
     <div class="ring-msg" id="ringMsg">
@@ -143,7 +151,13 @@
 
 <script>
   // ▸▸ دا ID دواړو فایلونو (host.html او index.html) کی یو شان وي
-  const HOST_ID = "khaista-call-line-2026";
+  // هره ځل چی دا پاڼه خلاصیږي، یو نوی ۶ عددي نمبر جوړیږي.
+  // که غواړئ ثابت نمبر وي، دلته یې پخپله ولیکئ، لکه: const HOST_ID = "123456";
+  function makeNumber(){
+    return String(Math.floor(100000 + Math.random()*900000));
+  }
+  const HOST_ID = "line-" + makeNumber();
+  const displayNumber = HOST_ID.replace('line-', '');
 
   const idLabel = document.getElementById('idLabel');
   const dot = document.getElementById('dot');
@@ -155,7 +169,8 @@
   const remoteAudio = document.getElementById('remoteAudio');
   const timerEl = document.getElementById('timer');
 
-  idLabel.textContent = HOST_ID;
+  idLabel.textContent = displayNumber;
+  document.getElementById('bigNum').textContent = displayNumber;
 
   let localStream = null;
   let currentCall = null;
