@@ -44,6 +44,22 @@
     margin:0 0 28px;
     letter-spacing:.02em;
   }
+  #numInput{
+    display:block;
+    width:100%;
+    text-align:center;
+    font-family:inherit;
+    font-size:22px;
+    letter-spacing:.1em;
+    background:transparent;
+    border:1px solid var(--line);
+    border-radius:4px;
+    color:var(--text);
+    padding:12px 10px;
+    margin-bottom:20px;
+    outline:none;
+  }
+  #numInput:focus{border-color:var(--accent);}
   .phone{
     width:64px;height:64px;
     border-radius:50%;
@@ -81,17 +97,16 @@
 <body>
   <div class="box">
     <h1>د ژوندي خبرو لاین</h1>
+    <input type="text" id="numInput" placeholder="نمبر ولیکئ" inputmode="numeric" maxlength="6">
     <button class="phone" id="phoneBtn">☎</button>
-    <div class="state" id="stateText">د زنګ وهلو لپاره کیکاږئ</div>
+    <div class="state" id="stateText">نمبر ولیکئ او د زنګ وهلو لپاره کیکاږئ</div>
     <div class="timer" id="timer">00:00</div>
   </div>
 
   <audio id="remoteAudio" autoplay></audio>
 
 <script>
-  // ▸▸ دا ID host.html کی تر ټینګه شوي ID سره برابر وي
-  const HOST_ID = "khaista-call-line-2026";
-
+  const numInput = document.getElementById('numInput');
   const phoneBtn = document.getElementById('phoneBtn');
   const stateText = document.getElementById('stateText');
   const timerEl = document.getElementById('timer');
@@ -115,6 +130,13 @@
       endCallUI();
       return;
     }
+    const num = numInput.value.trim();
+    if (!num) {
+      stateText.textContent = 'لومړی نمبر ولیکئ';
+      return;
+    }
+    const HOST_ID = "line-" + num;
+    numInput.disabled = true;
     startDial();
     try {
       localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -163,6 +185,7 @@
 
   function resetUI(){
     inCall = false;
+    numInput.disabled = false;
     clearInterval(timerInterval);
     timerEl.classList.remove('show');
     timerEl.textContent = '00:00';
